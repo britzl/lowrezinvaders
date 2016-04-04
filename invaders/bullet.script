@@ -1,0 +1,19 @@
+go.property("direction", 1)
+
+local COLLISION_RESPONSE = hash("collision_response")
+
+
+function init(self)
+	local pos = go.get_position()
+	local to = pos.y + self.direction * 64
+	
+	go.animate(".", "position.y", go.PLAYBACK_ONCE_FORWARD, to, go.EASING_LINEAR, 1, 0, function()
+		go.delete()
+	end)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == COLLISION_RESPONSE then
+		go.delete()
+	end
+end

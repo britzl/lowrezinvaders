@@ -1,0 +1,47 @@
+local input = require "utils.input"
+local flow = require "utils.flow"
+
+local MESSAGE_GAME_OVER = hash("game_over")
+
+
+local function game_loop()
+	flow.start(function()
+		while true do
+			flow.load(msg.url("#levelproxy"))
+			local result
+			repeat
+				result = flow.until_message()
+			until result.message_id == hash("game_over") or result.message_id == hash("level_completed")
+			flow.delay(3)
+			flow.unload(msg.url("#levelproxy"))
+		end
+	end)
+end
+
+function init(self)
+	input.acquire()
+	game_loop()
+end
+
+function final(self)
+	input.release()
+end
+
+function update(self, dt)
+	flow.update()
+end
+
+function on_message(self, message_id, message, sender)
+	print("on_message", message_id,sender)
+	flow.on_message(message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+    -- Add input-handling code here
+    -- Remove this function if not needed
+end
+
+function on_reload(self)
+    -- Add reload-handling code here
+    -- Remove this function if not needed
+end

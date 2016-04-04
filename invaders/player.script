@@ -1,0 +1,61 @@
+go.property("speed", 25)
+go.property("fire_interval", 0.6)
+
+local input = require "utils.input"
+
+local COLLISION_RESPONSE = hash("collision_response")
+
+local GROUP_BULLET = hash("bullet")
+local GROUP_ALIEN = hash("alien")
+
+
+local function die(self)
+end 
+
+
+function init(self)
+	self.fire_timestamp = 0
+	input.acquire()
+end
+
+function final(self)
+	input.release()
+end
+
+function update(self, dt)
+	if input.is_pressed("left") then
+		local pos = go.get_position()
+		pos.x = pos.x - (self.speed * dt)
+		go.set_position(pos)
+	elseif input.is_pressed("right") then
+		local pos = go.get_position()
+		pos.x = pos.x + (self.speed * dt)
+		go.set_position(pos)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	print("message_id", message_id)
+	if message_id == COLLISION_RESPONSE then
+		print("coll")
+		if message.group == GROUP_BULLET or message.group == GROUP_ALIEN then
+			factory.create("factories#explosion", go.get_position())
+			msg.post("invaders:/invaders", "game_over", { score = 0 })
+			input.release()
+		end
+		go.delete()
+	end
+end
+
+function on_input(self, action_id, action)
+	input.update(action_id, action)
+	if input.is_pressed("fire") and socket.gettime() > (self.fire_timestamp + self.fire_interval) then
+		self.fire_timestamp = socket.gettime()
+		factory.create("factories#playerbullet", go.get_position() + vmath.vector3(0, 5, 0), nil, { direction = 1 })
+	end
+end
+
+function on_reload(self)
+    -- Add reload-handling code here
+    -- Remove this function if not needed
+end

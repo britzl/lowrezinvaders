@@ -1,0 +1,11 @@
+local animation = require "utils.animation"
+
+function init(self)
+	animation.play(msg.url("#sprite"), hash("explosion"), function()
+		go.delete()
+	end)
+end
+
+function on_message(self, message_id, message, sender)
+	animation.on_message(message_id, message, sender)
+end
