@@ -18,6 +18,36 @@ local function is_in_front_row()
 	return true
 end
 
+local function is_in_left_row()
+	local my_pos = go.get_position()
+	for _,alien in pairs(aliens) do
+		local pos = go.get_position(alien.id)
+		if my_pos.x == pos.x and my_pos.y > pos.y then
+			return false
+		end
+	end
+	return true
+end
+
+local function get_minimum_distance_to_left_edge()
+	local distance = 64
+	for _,alien in pairs(aliens) do
+		local pos = go.get_position(alien.id)
+		distance = math.min(pos.x, distance)
+	end
+	return distance
+end
+
+local function get_minimum_distance_to_right_edge()
+	local distance = 64
+	for _,alien in pairs(aliens) do
+		local pos = go.get_position(alien.id)
+		distance = math.min(64 - pos.x, distance)
+	end
+	return distance
+end
+
+
 local function animate(self, to, duration)
 	local co = coroutine.running()
 	go.cancel_animations(".", "position")
@@ -30,9 +60,8 @@ end
 local function move(self)
 	local horizontal_duration = 0.2
 	local vertical_duration = 0.05
-	local right = vmath.vector3(16, 0, 0)
+	local margin = 4
 	local down = vmath.vector3(0, -2, 0)
-	local left = vmath.vector3(-16, 0, 0)
 
 	coroutine.wrap(function()
 		local pos = go.get_position()
@@ -45,13 +74,15 @@ local function move(self)
 			animate(self, pos + down, vertical_duration * alive)
 			
 			pos = go.get_position()
-			animate(self, pos + left, horizontal_duration * alive)
+			pos.x = pos.x - get_minimum_distance_to_left_edge() + margin
+			animate(self, pos, horizontal_duration * alive)
 			
 			pos = go.get_position()
 			animate(self, pos + down, vertical_duration * alive)
 			
 			pos = go.get_position()
-			animate(self, pos + right, horizontal_duration * alive)
+			pos.x = pos.x + get_minimum_distance_to_right_edge() - margin
+			animate(self, pos, horizontal_duration * alive)
 		end
 	end)()
 end
@@ -82,5 +113,9 @@ function on_message(self, message_id, message, sender)
 	if message_id == COLLISION_RESPONSE then
 		factory.create("factories#explosion", go.get_position())
 		go.delete()
+		msg.post("invaders:/hud", "increase_score", { amount = 100 })
+		if alive == 1 then
+			msg.post("invaders:/invaders", "level_completed")
+		end
 	end
 end

@@ -1,0 +1,16 @@
+local function update_score(self)
+	gui.set_text(gui.get_node("score"), tostring(self.score))
+end
+
+function init(self)
+	self.score = 0
+	update_score(self)
+end
+
+function on_message(self, message_id, message, sender)
+	print(message_id)
+	if message_id == hash("increase_score") then
+		self.score = self.score + message.amount
+		update_score(self)
+	end
+end

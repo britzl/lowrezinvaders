@@ -1,4 +1,4 @@
 font: "/assets/fonts/DCMicroClean.ttf"
-material: "/builtins/fonts/font.material"
+material: "/materials/font.material"
 size: 12
 antialias: 0

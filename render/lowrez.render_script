@@ -13,6 +13,8 @@ function init(self)
     self.view = vmath.matrix4()
 end
 
+local RESOLUTION = 64
+
 function update(self)
     render.set_depth_mask(true)
     render.clear({[render.BUFFER_COLOR_BIT] = self.clear_color, [render.BUFFER_DEPTH_BIT] = 1, [render.BUFFER_STENCIL_BIT] = 0})
@@ -21,9 +23,8 @@ function update(self)
 	local h = render.get_window_height()
 	local min_size = math.min(w, h)
 	local max_size = math.max(w, h)
-	local off_w = (max_size - w) / 2
-	local off_h = (max_size - h) / 2
-    render.set_viewport(0, 0, min_size, min_size)
+	local offset = (max_size - min_size) / 2
+    render.set_viewport(w > h and offset or 0, w < h and offset or 0, min_size, min_size)
     render.set_view(self.view)
 
     render.set_depth_mask(false)
@@ -33,15 +34,16 @@ function update(self)
     render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
     render.disable_state(render.STATE_CULL_FACE)
 
-    render.set_projection(vmath.matrix4_orthographic(0, 64, 0, 64, -1, 1))
+    render.set_projection(vmath.matrix4_orthographic(0, RESOLUTION, 0, RESOLUTION, -1, 1))
 
     render.draw(self.tile_pred)
     render.draw(self.particle_pred)
     render.draw_debug3d()
 
-    render.set_view(vmath.matrix4())
-    render.set_projection(vmath.matrix4_orthographic(0, min_size, 0, min_size, -1, 1))
-    --render.set_projection(vmath.matrix4_orthographic(0, render.get_window_width(), 0, render.get_window_height(), -1, 1))
+    render.set_view(self.view)
+    --render.set_view(vmath.matrix4())
+    --render.set_projection(vmath.matrix4_orthographic(0, RESOLUTION, 0, RESOLUTION, -1, 1))
+    render.set_projection(vmath.matrix4_orthographic(0, render.get_window_width(), 0, render.get_window_height(), -1, 1))
 
     render.enable_state(render.STATE_STENCIL_TEST)
     render.draw(self.gui_pred)
