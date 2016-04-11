@@ -4,7 +4,7 @@ instances {
   prototype: "/invaders/alien.go"
   position {
     x: 12.0
-    y: 59.0
+    y: 88.0
     z: 0.0
   }
   rotation {
@@ -20,11 +20,39 @@ instances {
   }
 }
 instances {
-  id: "alien10"
+  id: "alien9"
   prototype: "/invaders/alien.go"
   position {
     x: 42.0
-    y: 50.0
+    y: 79.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  component_properties {
+    id: "script"
+    properties {
+      id: "animation"
+      value: "alien2"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "alien10"
+  prototype: "/invaders/alien.go"
+  position {
+    x: 52.0
+    y: 79.0
     z: 0.0
   }
   rotation {
@@ -51,8 +79,188 @@ instances {
   id: "alien11"
   prototype: "/invaders/alien.go"
   position {
+    x: 12.0
+    y: 70.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "alien12"
+  prototype: "/invaders/alien.go"
+  position {
+    x: 22.0
+    y: 70.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "alien13"
+  prototype: "/invaders/alien.go"
+  position {
+    x: 32.0
+    y: 70.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "alien14"
+  prototype: "/invaders/alien.go"
+  position {
+    x: 42.0
+    y: 70.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "alien15"
+  prototype: "/invaders/alien.go"
+  position {
     x: 52.0
-    y: 50.0
+    y: 70.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "alien2"
+  prototype: "/invaders/alien.go"
+  position {
+    x: 22.0
+    y: 88.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "alien3"
+  prototype: "/invaders/alien.go"
+  position {
+    x: 32.0
+    y: 88.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "alien4"
+  prototype: "/invaders/alien.go"
+  position {
+    x: 42.0
+    y: 88.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "alien5"
+  prototype: "/invaders/alien.go"
+  position {
+    x: 52.0
+    y: 88.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "alien6"
+  prototype: "/invaders/alien.go"
+  position {
+    x: 12.0
+    y: 79.0
     z: 0.0
   }
   rotation {
@@ -76,191 +284,11 @@ instances {
   }
 }
 instances {
-  id: "alien13"
-  prototype: "/invaders/alien.go"
-  position {
-    x: 12.0
-    y: 41.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "alien14"
-  prototype: "/invaders/alien.go"
-  position {
-    x: 22.0
-    y: 41.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "alien15"
-  prototype: "/invaders/alien.go"
-  position {
-    x: 32.0
-    y: 41.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "alien16"
-  prototype: "/invaders/alien.go"
-  position {
-    x: 42.0
-    y: 41.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "alien17"
-  prototype: "/invaders/alien.go"
-  position {
-    x: 52.0
-    y: 41.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "alien2"
-  prototype: "/invaders/alien.go"
-  position {
-    x: 22.0
-    y: 59.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "alien3"
-  prototype: "/invaders/alien.go"
-  position {
-    x: 32.0
-    y: 59.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "alien4"
-  prototype: "/invaders/alien.go"
-  position {
-    x: 42.0
-    y: 59.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "alien5"
-  prototype: "/invaders/alien.go"
-  position {
-    x: 52.0
-    y: 59.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
   id: "alien7"
   prototype: "/invaders/alien.go"
   position {
-    x: 12.0
-    y: 50.0
+    x: 22.0
+    y: 79.0
     z: 0.0
   }
   rotation {
@@ -287,36 +315,8 @@ instances {
   id: "alien8"
   prototype: "/invaders/alien.go"
   position {
-    x: 22.0
-    y: 50.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  component_properties {
-    id: "script"
-    properties {
-      id: "animation"
-      value: "alien2"
-      type: PROPERTY_TYPE_HASH
-    }
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "alien9"
-  prototype: "/invaders/alien.go"
-  position {
     x: 32.0
-    y: 50.0
+    y: 79.0
     z: 0.0
   }
   rotation {
@@ -352,6 +352,14 @@ instances {
     y: 0.0
     z: 0.0
     w: 1.0
+  }
+  component_properties {
+    id: "script"
+    properties {
+      id: "fire_interval"
+      value: "0.2"
+      type: PROPERTY_TYPE_NUMBER
+    }
   }
   scale3 {
     x: 1.0

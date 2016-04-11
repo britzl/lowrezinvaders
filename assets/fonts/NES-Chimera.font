@@ -1,4 +1,4 @@
-font: "/assets/fonts/DCMicroClean.ttf"
+font: "/assets/fonts/NES-Chimera.ttf"
 material: "/materials/font.material"
-size: 15
+size: 8
 antialias: 0

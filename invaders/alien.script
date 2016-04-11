@@ -1,11 +1,16 @@
 go.property("animation", hash("alien1"))
+go.property("score", 20)
 
 local COLLISION_RESPONSE = hash("collision_response")
+local LEVEL_STARTED = hash("level_started")
 
 local aliens = {}
 local alive = 0
 local fire_timestamp = 0
-local fire_interval = 2
+local fire_interval = 1
+local duration_factor = 15
+local vertical_duration = 0.05 * duration_factor
+local horizontal_duration = 0.2 * duration_factor
 
 local function is_in_front_row()
 	local my_pos = go.get_position()
@@ -48,46 +53,54 @@ local function get_minimum_distance_to_right_edge()
 end
 
 
-local function animate(self, to, duration)
+local function animate(self, to, duration, easing)
 	local co = coroutine.running()
 	go.cancel_animations(".", "position")
-	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, to, go.EASING_LINEAR, duration, 0, function()
+	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, to, easing or go.EASING_LINEAR, duration, 0, function()
 		coroutine.resume(co)
 	end)
 	coroutine.yield()
 end
 
+local function adjust_duration(duration)
+	return duration * alive / duration_factor
+end
+
 local function move(self)
-	local horizontal_duration = 0.2
-	local vertical_duration = 0.05
 	local margin = 4
 	local down = vmath.vector3(0, -2, 0)
 
 	coroutine.wrap(function()
+		fire_timestamp = socket.gettime() + 10000
 		local pos = go.get_position()
-		animate(self, pos, 0.1)
+		animate(self, pos + vmath.vector3(0, -29, 0), 1, go.EASING_OUTEXPO)
+
+		pos = go.get_position()
+		animate(self, pos + vmath.vector3(8, 0, 0), adjust_duration(self.horizontal_duration) / 2)
 		
-		animate(self, pos + vmath.vector3(8, 0, 0), horizontal_duration * alive / 2)
-		
+		fire_timestamp = 0
 		while true do
 			pos = go.get_position()
-			animate(self, pos + down, vertical_duration * alive)
+			animate(self, pos + down, adjust_duration(self.vertical_duration))
 			
 			pos = go.get_position()
 			pos.x = pos.x - get_minimum_distance_to_left_edge() + margin
-			animate(self, pos, horizontal_duration * alive)
+			animate(self, pos, adjust_duration(self.horizontal_duration))
 			
 			pos = go.get_position()
-			animate(self, pos + down, vertical_duration * alive)
+			animate(self, pos + down, adjust_duration(self.vertical_duration))
 			
 			pos = go.get_position()
 			pos.x = pos.x + get_minimum_distance_to_right_edge() - margin
-			animate(self, pos, horizontal_duration * alive)
+			animate(self, pos, adjust_duration(self.horizontal_duration))
 		end
 	end)()
 end
 
 function init(self)
+	self.horizontal_duration = horizontal_duration
+	self.vertical_duration = vertical_duration		
+	
 	local id = go.get_id()
 	msg.post("#sprite", "play_animation", { id = self.animation })
 	aliens[hash_to_hex(id)] = { id = id, pos = go.get_position() }
@@ -98,6 +111,11 @@ end
 function final(self)
 	aliens[hash_to_hex(go.get_id())] = nil
 	alive = alive - 1
+	print("alien died, alive", alive)
+	if alive == 0 then
+		msg.post("invaders:/invaders", "level_completed")
+		print("posting level completed")
+	end
 end
 
 function update(self, dt)
@@ -113,9 +131,9 @@ function on_message(self, message_id, message, sender)
 	if message_id == COLLISION_RESPONSE then
 		factory.create("factories#explosion", go.get_position())
 		go.delete()
-		msg.post("invaders:/hud", "increase_score", { amount = 100 })
-		if alive == 1 then
-			msg.post("invaders:/invaders", "level_completed")
-		end
+		msg.post("invaders:/hud", "increase_score", { amount = self.score })
+	elseif message_id == LEVEL_STARTED then
+		self.horizontal_duration = horizontal_duration / message.level
+		self.vertical_duration = vertical_duration / message.level		
 	end
 end

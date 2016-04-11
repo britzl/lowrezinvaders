@@ -6,13 +6,31 @@ local MESSAGE_GAME_OVER = hash("game_over")
 
 local function game_loop()
 	flow.start(function()
+		local level = 1
 		while true do
+			msg.post("hud", "show_message", { message = "GET READY"})
+			flow.delay(2)
+			msg.post("hud", "show_message", { message = ""})
 			flow.load(msg.url("#levelproxy"))
-			local result
-			repeat
-				result = flow.until_message()
-			until result.message_id == hash("game_over") or result.message_id == hash("level_completed")
-			flow.delay(3)
+			for i=1,15 do
+				msg.post("level:/alien" .. i, "level_started", { level = level })
+			end
+			
+			print("waiting for game over or level completed")
+			local result = flow.until_message(hash("game_over"), hash("level_completed"))
+			if result.message_id == hash("level_completed") then
+				msg.post("hud", "show_message", { message = "WELL DONE EARTHLING!"})
+				level = level + 1
+				flow.delay(3)
+			elseif result.message_id == hash("game_over") then
+				msg.post("hud", "show_message", { message = "GAME OVER!"})
+				level = 1
+				flow.delay(3)
+				msg.post("hud", "reset_score")
+			end
+			print("new level")
+
+			msg.post("hud", "show_message", { message = ""})
 			flow.unload(msg.url("#levelproxy"))
 		end
 	end)

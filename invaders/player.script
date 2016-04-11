@@ -26,10 +26,12 @@ function update(self, dt)
 	if input.is_pressed("left") then
 		local pos = go.get_position()
 		pos.x = pos.x - (self.speed * dt)
+		pos.x = math.max(5, pos.x)
 		go.set_position(pos)
 	elseif input.is_pressed("right") then
 		local pos = go.get_position()
 		pos.x = pos.x + (self.speed * dt)
+		pos.x = math.min(59, pos.x)
 		go.set_position(pos)
 	end
 end
@@ -40,6 +42,7 @@ function on_message(self, message_id, message, sender)
 		print("coll")
 		if message.group == GROUP_BULLET or message.group == GROUP_ALIEN then
 			factory.create("factories#explosion", go.get_position())
+			print("posting game over")
 			msg.post("invaders:/invaders", "game_over", { score = 0 })
 			input.release()
 		end

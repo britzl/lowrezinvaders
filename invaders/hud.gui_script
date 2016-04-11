@@ -1,5 +1,18 @@
+local flow = require "utils.flow"
+
 local function update_score(self)
 	gui.set_text(gui.get_node("score"), tostring(self.score))
+end
+
+local function show_message(self, message)
+	flow.start(function()
+		local node = gui.get_node("message")
+		gui.set_text(node, "")
+		for i=1,#message do
+			gui.set_text(node, message:sub(1,i))
+			flow.delay(0.01)
+		end
+	end)
 end
 
 function init(self)
@@ -7,10 +20,19 @@ function init(self)
 	update_score(self)
 end
 
+function update(self, dt)
+	flow.update()
+end
+
 function on_message(self, message_id, message, sender)
-	print(message_id)
+	flow.on_message(message_id, message, sender)
 	if message_id == hash("increase_score") then
 		self.score = self.score + message.amount
+		update_score(self)
+	elseif message_id == hash("show_message") then
+		show_message(self, message.message)
+	elseif message_id == hash("reset_score") then
+		self.score = 0
 		update_score(self)
 	end
 end
