@@ -148,10 +148,12 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == COLLISION_RESPONSE then
+		-- I died!
 		factory.create("factories#explosion", go.get_position())
 		go.delete()
 		msg.post("invaders:/hud", "increase_score", { amount = self.score })
 	elseif message_id == LEVEL_ENDED then
+		-- end animation and stop shooting when the level has ended
 		go.cancel_animations(".", "position")
 		self.shoot = false
 	elseif message_id == LEVEL_STARTED then
