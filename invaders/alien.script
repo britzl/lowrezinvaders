@@ -1,6 +1,8 @@
 go.property("animation", hash("alien1"))
 go.property("score", 20)
 
+local broadcast = require "utils.broadcast"
+
 local COLLISION_RESPONSE = hash("collision_response")
 local LEVEL_STARTED = hash("level_started")
 local LEVEL_ENDED = hash("level_ended")
@@ -117,6 +119,9 @@ function init(self)
 	-- put alien in list of aliens that are alive
 	table.insert(aliens, { id = go.get_id() })
 	alive = alive + 1
+	
+	broadcast.register(LEVEL_STARTED)
+	broadcast.register(LEVEL_ENDED)
 end
 
 function final(self)
@@ -132,6 +137,8 @@ function final(self)
 	if alive == 0 then
 		msg.post("invaders:/invaders", "level_completed")
 	end
+	broadcast.unregister(LEVEL_STARTED)
+	broadcast.unregister(LEVEL_ENDED)
 end
 
 function update(self, dt)

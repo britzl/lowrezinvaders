@@ -1,38 +1,34 @@
 local input = require "utils.input"
 local flow = require "utils.flow"
-
-local function post_to_aliens(message_id, message)
-	message = message or {}
-	for i=1,15 do
-		msg.post("level:/alien" .. i, message_id, message)
-	end
-end
+local broadcast = require "utils.broadcast"
 
 local function game_loop()
 	local level = 1
 	while true do
-		-- show level start message
+		-- show level start message, load level, wait 2s and start level
 		msg.post("hud", "show_message", { message = "GET READY"})
 		flow.load(msg.url("#levelproxy"))
 		flow.delay(2)
 		msg.post("hud", "show_message", { message = ""})
+		broadcast.send("level_started", { level = level })
 		
-		-- load game
-		post_to_aliens("level_started", { level = level })
-		
+		-- wait until game_over or level_completed message is received
 		local result = flow.until_message(hash("game_over"), hash("level_completed"))
+		-- handle level_completed
 		if result.message_id == hash("level_completed") then
 			msg.post("hud", "show_message", { message = "WELL DONE EARTHLING!"})
 			level = level + 1
 			flow.delay(3)
+		-- handle game_over
 		elseif result.message_id == hash("game_over") then
-			post_to_aliens("level_ended")
+			broadcast.send("level_ended")
 			msg.post("hud", "show_message", { message = "GAME OVER!"})
 			level = 1
 			flow.delay(3)
 			msg.post("hud", "reset_score")
 		end
 
+		-- unload level
 		msg.post("hud", "show_message", { message = ""})
 		flow.unload(msg.url("#levelproxy"))
 	end
