@@ -20,34 +20,6 @@ instances {
   }
 }
 instances {
-  id: "alien9"
-  prototype: "/invaders/alien.go"
-  position {
-    x: 42.0
-    y: 79.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  component_properties {
-    id: "script"
-    properties {
-      id: "animation"
-      value: "alien2"
-      type: PROPERTY_TYPE_HASH
-    }
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
   id: "alien10"
   prototype: "/invaders/alien.go"
   position {
@@ -340,6 +312,34 @@ instances {
   }
 }
 instances {
+  id: "alien9"
+  prototype: "/invaders/alien.go"
+  position {
+    x: 42.0
+    y: 79.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  component_properties {
+    id: "script"
+    properties {
+      id: "animation"
+      value: "alien2"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
   id: "player"
   prototype: "/invaders/player.go"
   position {
@@ -352,14 +352,6 @@ instances {
     y: 0.0
     z: 0.0
     w: 1.0
-  }
-  component_properties {
-    id: "script"
-    properties {
-      id: "fire_interval"
-      value: "0.2"
-      type: PROPERTY_TYPE_NUMBER
-    }
   }
   scale3 {
     x: 1.0
