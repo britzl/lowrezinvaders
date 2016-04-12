@@ -11,10 +11,13 @@ end
 local function game_loop()
 	local level = 1
 	while true do
+		-- show level start message
 		msg.post("hud", "show_message", { message = "GET READY"})
+		flow.load(msg.url("#levelproxy"))
 		flow.delay(2)
 		msg.post("hud", "show_message", { message = ""})
-		flow.load(msg.url("#levelproxy"))
+		
+		-- load game
 		post_to_aliens("level_started", { level = level })
 		
 		local result = flow.until_message(hash("game_over"), hash("level_completed"))
