@@ -24,6 +24,7 @@ end
 --- Unload a collection
 -- @param collection_url
 function M.unload(collection_url)
+	assert(collection_url, "You must provide a collection url to unload")
 	msg.post(collection_url, "unload")
 end
 

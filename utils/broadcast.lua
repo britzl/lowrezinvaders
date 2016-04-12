@@ -12,6 +12,7 @@ end
 -- @param message_id
 -- @param message
 function M.send(message_id, message)
+	assert(message_id)
 	local key = hash_to_hex(ensure_hash(message_id))
 	if receivers[key] then
 		message = message or {}
@@ -24,6 +25,7 @@ end
 --- Register the current script as a receiver for a specific message
 -- @param message_id
 function M.register(message_id)
+	assert(message_id)
 	local key = hash_to_hex(ensure_hash(message_id))
 	receivers[key] = receivers[key] or {}
 	table.insert(receivers[key], msg.url())
@@ -32,6 +34,7 @@ end
 --- Unregister the current script from receiving a previously registered message
 -- @param message_id
 function M.unregister(message_id)
+	assert(message_id)
 	local key = hash_to_hex(ensure_hash(message_id))
 	if not receivers[key] then
 		return
