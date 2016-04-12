@@ -3,15 +3,18 @@ go.property("score", 20)
 
 local COLLISION_RESPONSE = hash("collision_response")
 local LEVEL_STARTED = hash("level_started")
+local LEVEL_ENDED = hash("level_ended")
 
-local aliens = {}
-local alive = 0
-local fire_timestamp = 0
-local fire_interval = 1
-local duration_factor = 15
-local vertical_duration = 0.05 * duration_factor
-local horizontal_duration = 0.2 * duration_factor
+-- These values are all shared between all instances of the alien.script
+local aliens = {} -- All aliens currently alive
+local alive = 0 -- Number of aliens alive
+local fire_timestamp = 0 -- Timestamp when the aliens fired
+local fire_interval = 1 -- Interval at which the aliens should fire
+local vertical_duration = 0.1 -- Default speed of alien movement when moving down
+local horizontal_duration = 1.4 -- Default speed of alien movement when moving left/right
 
+--- Is this alien in the front row? (ie nearest the player)
+-- @return true if alien is in the front row
 local function is_in_front_row()
 	local my_pos = go.get_position()
 	for _,alien in pairs(aliens) do
@@ -23,17 +26,8 @@ local function is_in_front_row()
 	return true
 end
 
-local function is_in_left_row()
-	local my_pos = go.get_position()
-	for _,alien in pairs(aliens) do
-		local pos = go.get_position(alien.id)
-		if my_pos.x == pos.x and my_pos.y > pos.y then
-			return false
-		end
-	end
-	return true
-end
-
+--- Get minimum distance from all aliens to the left edge of the screen
+-- @return Minimum distance to left edge of screen
 local function get_minimum_distance_to_left_edge()
 	local distance = 64
 	for _,alien in pairs(aliens) do
@@ -43,6 +37,8 @@ local function get_minimum_distance_to_left_edge()
 	return distance
 end
 
+--- Get minimum distance from all aliens to right edge of the screen
+-- @return Minimum distance to the right edge of the screen
 local function get_minimum_distance_to_right_edge()
 	local distance = 64
 	for _,alien in pairs(aliens) do
@@ -52,7 +48,7 @@ local function get_minimum_distance_to_right_edge()
 	return distance
 end
 
-
+--- Animate the alien to a specific position
 local function animate(self, to, duration, easing)
 	local co = coroutine.running()
 	go.cancel_animations(".", "position")
@@ -62,59 +58,84 @@ local function animate(self, to, duration, easing)
 	coroutine.yield()
 end
 
+--- Adjust the duration based on number of aliens alive and according to a
+-- pretty random formula...
+-- The fewer aliens alive the shorter the adjusted duration
+-- @param duration The duration to adjust
+-- @return The adjusted duration
 local function adjust_duration(duration)
-	return duration * alive / duration_factor
+	return duration * (3 + (alive / 5)) / 2
 end
 
+-- Move down, end game if moving below bottom edge of screen
+local function move_down(self)
+	pos = go.get_position()
+	pos.y = pos.y - 2
+	animate(self, pos, adjust_duration(self.vertical_duration))
+	if pos.y <= 0 then
+		msg.post("invaders:/invaders", "game_over")
+	end
+end
+
+local function move_left_right(self, distance_to_edge)
+	pos = go.get_position()
+	pos.x = pos.x + distance_to_edge
+	animate(self, pos, adjust_duration(self.horizontal_duration * math.abs(distance_to_edge) / 64))
+end
+
+--- Start the movement loop for this alien
+-- The alien will drop down from outside the screen and then start moving
+-- to the right, down, left and down on and on until deleted
 local function move(self)
 	local margin = 4
 	local down = vmath.vector3(0, -2, 0)
 
 	coroutine.wrap(function()
+		-- don't start shooting immediately
 		fire_timestamp = socket.gettime() + 10000
+		
+		-- let the alien drop in from above
 		local pos = go.get_position()
 		animate(self, pos + vmath.vector3(0, -29, 0), 1, go.EASING_OUTEXPO)
 
-		pos = go.get_position()
-		animate(self, pos + vmath.vector3(8, 0, 0), adjust_duration(self.horizontal_duration) / 2)
-		
+		-- now we're allowed to start shooting
 		fire_timestamp = 0
 		while true do
-			pos = go.get_position()
-			animate(self, pos + down, adjust_duration(self.vertical_duration))
-			
-			pos = go.get_position()
-			pos.x = pos.x - get_minimum_distance_to_left_edge() + margin
-			animate(self, pos, adjust_duration(self.horizontal_duration))
-			
-			pos = go.get_position()
-			animate(self, pos + down, adjust_duration(self.vertical_duration))
-			
-			pos = go.get_position()
-			pos.x = pos.x + get_minimum_distance_to_right_edge() - margin
-			animate(self, pos, adjust_duration(self.horizontal_duration))
+			move_left_right(self, get_minimum_distance_to_right_edge() - margin)
+			move_down(self)
+			move_left_right(self, -get_minimum_distance_to_left_edge() + margin)
+			move_down(self)
 		end
 	end)()
 end
 
 function init(self)
+	-- set initial hori
 	self.horizontal_duration = horizontal_duration
-	self.vertical_duration = vertical_duration		
+	self.vertical_duration = vertical_duration
 	
-	local id = go.get_id()
+	-- start playing animation depending on which type this alien is
 	msg.post("#sprite", "play_animation", { id = self.animation })
-	aliens[hash_to_hex(id)] = { id = id, pos = go.get_position() }
+	-- put alien in list of aliens that are alive
+	table.insert(aliens, { id = go.get_id() })
 	alive = alive + 1
+	
+	-- start movement loop
 	move(self)
 end
 
 function final(self)
-	aliens[hash_to_hex(go.get_id())] = nil
+	-- remove from list of aliens that are alive
+	local my_id = go.get_id()
+	for k,alien in pairs(aliens) do
+		if alien.id == my_id then
+			aliens[k] = nil
+		end
+	end
+	-- decrease alive counter and trigger level complete if no aliens are alive
 	alive = alive - 1
-	print("alien died, alive", alive)
 	if alive == 0 then
 		msg.post("invaders:/invaders", "level_completed")
-		print("posting level completed")
 	end
 end
 
@@ -132,6 +153,8 @@ function on_message(self, message_id, message, sender)
 		factory.create("factories#explosion", go.get_position())
 		go.delete()
 		msg.post("invaders:/hud", "increase_score", { amount = self.score })
+	elseif message_id == LEVEL_ENDED then
+		go.cancel_animations(".", "position")
 	elseif message_id == LEVEL_STARTED then
 		self.horizontal_duration = horizontal_duration / message.level
 		self.vertical_duration = vertical_duration / message.level		

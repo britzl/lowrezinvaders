@@ -1,6 +1,5 @@
 local M = {}
 
-
 local instances = {}
 
 local MSG_RESUME = hash("FLOW_RESUME")

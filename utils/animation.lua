@@ -1,9 +1,15 @@
+--- Module to simplify sprite animation handling
+
 local M = {}
 
 local ANIMATION_DONE = hash("animation_done")
 
 local callbacks = {}
 
+--- Play an animation on a sprite
+-- @param sprite_url
+-- @param animation_id
+-- @param on_animation_done The function to call when the animation has finished
 function M.play(sprite_url, animation_id, on_animation_done)
 	assert(sprite_url, "You must provide a sprite url")
 	assert(animation_id, "You must provide an animation id")
@@ -13,6 +19,7 @@ function M.play(sprite_url, animation_id, on_animation_done)
 	msg.post(sprite_url, "play_animation", { id = animation_id })
 end
 
+--- Forward any calls to on_message from scripts using this module
 function M.on_message(message_id, message, sender)
 	if message_id == ANIMATION_DONE then
 		local sender_string = tostring(sender)

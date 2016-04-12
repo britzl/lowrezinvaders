@@ -37,12 +37,9 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	print("message_id", message_id)
 	if message_id == COLLISION_RESPONSE then
-		print("coll")
 		if message.group == GROUP_BULLET or message.group == GROUP_ALIEN then
 			factory.create("factories#explosion", go.get_position())
-			print("posting game over")
 			msg.post("invaders:/invaders", "game_over", { score = 0 })
 			input.release()
 		end
@@ -56,9 +53,4 @@ function on_input(self, action_id, action)
 		self.fire_timestamp = socket.gettime()
 		factory.create("factories#playerbullet", go.get_position() + vmath.vector3(0, 5, 0), nil, { direction = 1 })
 	end
-end
-
-function on_reload(self)
-    -- Add reload-handling code here
-    -- Remove this function if not needed
 end

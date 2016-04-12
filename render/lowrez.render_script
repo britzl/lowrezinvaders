@@ -40,11 +40,6 @@ function update(self)
     render.draw(self.particle_pred)
     render.draw_debug3d()
 
-    render.set_view(self.view)
-    --render.set_view(vmath.matrix4())
-    --render.set_projection(vmath.matrix4_orthographic(0, RESOLUTION, 0, RESOLUTION, -1, 1))
-    render.set_projection(vmath.matrix4_orthographic(0, render.get_window_width() / 4, 0, render.get_window_height() / 4, -1, 1))
-
     render.enable_state(render.STATE_STENCIL_TEST)
     render.draw(self.gui_pred)
     render.draw(self.text_pred)

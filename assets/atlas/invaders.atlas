@@ -1,0 +1,51 @@
+images {
+  image: "/assets/atlas/player.png"
+}
+images {
+  image: "/assets/atlas/bullet.png"
+}
+animations {
+  id: "alien1"
+  images {
+    image: "/assets/atlas/alien1_1.png"
+  }
+  images {
+    image: "/assets/atlas/alien1_2.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 5
+}
+animations {
+  id: "alien2"
+  images {
+    image: "/assets/atlas/alien2_1.png"
+  }
+  images {
+    image: "/assets/atlas/alien2_2.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 5
+}
+animations {
+  id: "explosion"
+  images {
+    image: "/assets/atlas/explosion_1.png"
+  }
+  images {
+    image: "/assets/atlas/explosion_2.png"
+  }
+  images {
+    image: "/assets/atlas/explosion_3.png"
+  }
+  images {
+    image: "/assets/atlas/explosion_4.png"
+  }
+  images {
+    image: "/assets/atlas/explosion_5.png"
+  }
+  images {
+    image: "/assets/atlas/explosion_6.png"
+  }
+  fps: 20
+}
+extrude_borders: 2
