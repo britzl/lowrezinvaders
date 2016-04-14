@@ -23,3 +23,6 @@ shared_state = 1
 default_texture_min_filter = nearest
 default_texture_mag_filter = nearest
 
+[tracking]
+app_id = 141DA993A172CEE7
+
