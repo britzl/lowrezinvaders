@@ -16,7 +16,11 @@ components {
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/assets/atlas/invaders.atlas\"\ndefault_animation: \"explosion\"\n"
+  data: "tile_set: \"/assets/atlas/invaders.atlas\"\n"
+  "default_animation: \"explosion\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
   position {
     x: 0.0
     y: 0.0
